@@ -1,0 +1,311 @@
+<!-- templates/index.html - Super Enhanced for YouTube Appeal: More Animations, Dark Mode, Progress Bar, Confetti on Success, Better Layout -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analog Meter Reader - Pyresearch Magic ✨</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        :root {
+            --primary: #007bff;
+            --success: #28a745;
+            --bg-light: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+            --bg-dark: linear-gradient(135deg, #1e293b, #334155);
+            --text-light: #333;
+            --text-dark: #e2e8f0;
+            --card-light: white;
+            --card-dark: #2d3748;
+        }
+        body {
+            background: var(--bg-light);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-light);
+            transition: all 0.5s ease;
+        }
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+        header h1 { font-size: 2.8rem; margin-bottom: 15px; }
+        header p { font-size: 1.3rem; }
+        .card {
+            background: var(--card-light);
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,123,255,0.2);
+            overflow: hidden;
+            transition: transform 0.4s, box-shadow 0.4s;
+        }
+        body.dark-mode .card { background: var(--card-dark); }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 50px rgba(0,123,255,0.3); }
+        .upload-area {
+            border: 4px dashed var(--primary);
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            background: rgba(255,255,255,0.8);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        body.dark-mode .upload-area { background: rgba(45,55,72,0.8); }
+        .upload-area.dragover {
+            border-color: var(--success);
+            background: rgba(40,167,69,0.1);
+            transform: scale(1.03);
+        }
+        .upload-area i { font-size: 4rem; color: var(--primary); margin-bottom: 25px; transition: color 0.3s; }
+        .upload-area p { font-size: 1.2rem; color: #555; }
+        body.dark-mode .upload-area p { color: #ccc; }
+        .form-control, .form-select {
+            border-radius: 15px;
+            padding: 12px;
+            font-size: 1.1rem;
+        }
+        .btn-primary {
+            border-radius: 50px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            transition: all 0.4s;
+            box-shadow: 0 4px 10px rgba(0,123,255,0.3);
+        }
+        .btn-primary:hover { transform: scale(1.08); box-shadow: 0 6px 15px rgba(0,123,255,0.5); }
+        .result-img {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transition: transform 0.4s;
+        }
+        .result-img:hover { transform: scale(1.05); }
+        .reading { color: var(--success); font-weight: 700; font-size: 2rem; }
+        .bill-section {
+            background: rgba(255,255,255,0.9);
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        body.dark-mode .bill-section { background: rgba(45,55,72,0.9); }
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 60px;
+            border-radius: 0 0 20px 20px;
+        }
+        footer a {
+            color: #fff;
+            margin: 0 20px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s, transform 0.3s;
+        }
+        footer a:hover { color: #ffc107; transform: scale(1.1); }
+        #preview {
+            max-width: 250px;
+            margin: 25px auto;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            display: none;
+            transition: opacity 0.5s;
+        }
+        #progressBar {
+            display: none;
+            margin-top: 20px;
+        }
+        .progress-bar { transition: width 0.5s ease-in-out; }
+        .dark-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: white;
+            background: var(--primary);
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        .dark-toggle:hover { transform: rotate(180deg); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeInUp { animation: fadeInUp 1s ease-out; }
+        .confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+    </style>
+</head>
+<body>
+    <div class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i></div>
+
+    <header class="animate__animated animate__fadeInDown">
+        <h1><i class="fas fa-tachometer-alt me-3"></i> Analog Meter Reader by Pyresearch</h1>
+        <p>Upload Meter Image for Instant Reading & Bill Calc – Free, Fun & Super Accurate! 📈✨</p>
+    </header>
+
+    <div class="container mt-5">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-warning alert-dismissible fade show animate__animated animate__bounceIn" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="card animate__animated animate__zoomIn">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt animate__animated animate__pulse animate__infinite"></i>
+                        <p>Drag & Drop or Click to Upload Your Meter Image</p>
+                        <input type="file" name="file" id="fileInput" class="form-control d-none" accept="image/*" required>
+                        <img id="preview" alt="Image Preview">
+                        <label for="utility_type" class="form-label mt-4">Choose Utility Type:</label>
+                        <select name="utility_type" id="utility_type" class="form-select mb-4">
+                            <option value="electricity">Electricity (electricity) ⚡</option>
+                            <option value="gas">Gas (Approx) 🔥</option>
+                            <option value="water">Water (Approx) 💧</option>
+                        </select>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-rocket me-2"></i> Analyze Now!</button>
+                    </div>
+                    <div id="progressBar" class="progress mt-3">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if result %}
+            <div class="row mt-5 animate-fadeInUp">
+                <div class="col-md-6">
+                    <h4 class="text-center animate__animated animate__fadeInLeft">Original Image</h4>
+                    <img src="/static/{{ original }}" class="img-fluid result-img animate__animated animate__fadeInLeft" alt="Original">
+                </div>
+                <div class="col-md-6">
+                    <h4 class="text-center animate__animated animate__fadeInRight">Detected & Annotated</h4>
+                    <img src="/static/{{ result }}" class="img-fluid result-img animate__animated animate__fadeInRight" alt="Result">
+                </div>
+            </div>
+
+            <div class="text-center mt-4 bill-section animate-fadeInUp">
+                <h3>Meter Reading: <span class="reading">{{ reading }}</span></h3>
+                <h4>Assumed Consumption: {{ consumption }} Units</h4>
+                <h3>Estimated Bill: Rs {{ bill_amount }} 💸</h3>
+                <pre class="text-start mx-auto" style="max-width: 400px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">{{ bill_details }}</pre>
+                {% if detections %}
+                    <h5>Detections (Left to Right):</h5>
+                    <ul class="list-group w-50 mx-auto">
+                        {% for det in detections %}
+                            <li class="list-group-item">{{ det.label }} (Conf: {{ det.confidence }})</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <p class="small text-muted">Note: Estimates are approx. Check official for accuracy. Made with ❤️ by Pyresearch!</p>
+            </div>
+            <canvas id="confetti" class="confetti"></canvas>
+        {% endif %}
+    </div>
+
+    <footer>
+        <p><strong>Contact Pyresearch – Let's Connect! 🌐</strong></p>
+        <p>Phone: +447596962881 📞</p>
+        <a href="https://www.youtube.com/channel/UCyB_7yHs7y8u9rONDSXgkCg/join"><i class="fab fa-youtube me-2"></i> Channel Membership</a>
+        <a href="https://www.facebook.com/Pyresearch"><i class="fab fa-facebook me-2"></i> Facebook</a>
+        <a href="https://www.youtube.com/c/Pyresearch"><i class="fab fa-youtube me-2"></i> YouTube</a>
+        <a href="https://medium.com/@Pyresearch"><i class="fab fa-medium me-2"></i> Medium</a>
+        <a href="https://www.instagram.com/pyresearch/"><i class="fab fa-instagram me-2"></i> Instagram</a>
+        <a href="https://www.linkedin.com/company/Pyresearch"><i class="fab fa-linkedin me-2"></i> LinkedIn</a>
+        <a href="https://twitter.com/Noorkhokhar10"><i class="fab fa-twitter me-2"></i> Twitter</a>
+        <a href="https://discord.com/invite/BHxGBn98"><i class="fab fa-discord me-2"></i> Discord</a>
+        <a href="https://github.com/Pyresearch"><i class="fab fa-github me-2"></i> GitHub</a>
+        <a href="https://www.quora.com/profile/Pyresearch"><i class="fab fa-quora me-2"></i> Quora</a>
+        <a href="https://github.com/noorkhokhar99"><i class="fab fa-github me-2"></i> GitHub (Personal)</a>
+        <p class="mt-4">Reach out for queries, feedback, or collabs – We're excited to hear from you! 🎥 (Check our YouTube for tutorials!)</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script>
+        // Dark Mode Toggle
+        const body = document.body;
+        const darkToggle = document.getElementById('darkToggle');
+        darkToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            darkToggle.innerHTML = body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+
+        // Upload Area Interactions
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+        const form = document.getElementById('uploadForm');
+        const progressBar = document.querySelector('#progressBar .progress-bar');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    preview.classList.add('animate__animated', 'animate__fadeIn');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+            fileInput.dispatchEvent(new Event('change'));
+        });
+
+        // Progress Simulation on Submit (since no real upload progress, simulate)
+        form.addEventListener('submit', () => {
+            document.getElementById('progressBar').style.display = 'block';
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) clearInterval(interval);
+                width += 10;
+                progressBar.style.width = width + '%';
+            }, 200);
+        });
+
+        // Confetti on Results
+        if (document.getElementById('confetti')) {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+    </script>
+</body>
+</html>
